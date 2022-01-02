@@ -5,6 +5,10 @@ require("dotenv").config();
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
+const fs = require("fs");
+const { promisify } = require("util");
+const unlinkAsync = promisify(fs.unlink);
+
 var app = express();
 
 app.use(cors());
@@ -17,8 +21,9 @@ app.get("/", function (req, res) {
 app.post(
   "/api/fileanalyse",
   upload.single("upfile"),
-  function (req, res, next) {
+  async function (req, res, next) {
     const { originalname, mimetype, size } = req.file;
+    await unlinkAsync(req.file.path);
     res.json({
       name: originalname,
       type: mimetype,
