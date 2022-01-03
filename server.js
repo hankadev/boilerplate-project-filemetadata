@@ -14,14 +14,14 @@ var app = express();
 app.use(cors());
 app.use("/public", express.static(process.cwd() + "/public"));
 
-app.get("/", function (req, res) {
+app.get("/", (req, res) => {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
 app.post(
   "/api/fileanalyse",
   upload.single("upfile"),
-  async function (req, res, next) {
+  async (req, res, next) => {
     const { originalname, mimetype, size } = req.file;
     await unlinkAsync(req.file.path);
     res.json({
